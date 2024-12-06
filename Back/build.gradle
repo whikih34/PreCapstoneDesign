@@ -1,0 +1,65 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '3.0.0' // Spring Boot 플러그인 추가
+    id 'io.spring.dependency-management' version '1.1.0' // Spring 의존성 관리 플러그인 추가
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot & Lombok
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.0'
+    implementation 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    // AWS SDK 2.x
+    implementation platform("software.amazon.awssdk:bom:2.27.21")
+    implementation "software.amazon.awssdk:s3"
+
+    // Test Dependencies
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.0' // Spring Boot Test
+
+    // JPA Dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.0'
+    runtimeOnly 'com.mysql:mysql-connector-j:8.0.33'
+
+    // Additional Dependencies
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation 'commons-io:commons-io:2.11.0'
+}
+
+group = 'com.springboot'
+version = '0.0.1-SNAPSHOT'
+description = 'APIServer'
+java.sourceCompatibility = JavaVersion.VERSION_17
+
+// Spring Boot 플러그인 설정
+springBoot {
+    mainClass = 'com.springboot.apiserver.ApiServerApplication'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform() // JUnit5 플랫폼 설정
+}
